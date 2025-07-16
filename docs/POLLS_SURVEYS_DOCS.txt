@@ -1,0 +1,63 @@
+A Polls & Surveys App lets users create, share, and vote on polls with real-time results.
+
+Polls & Surveys App: Detailed Overview
+
+Core Features
+ • User Authentication:
+Users sign up and log in using Supabase Auth (email/password, OAuth, etc.).
+ • Create Polls/Surveys:
+Authenticated users can create new polls or surveys with a title, description, and multiple options.
+ • Vote on Polls:
+Users can select an option and submit their vote. Each user can vote only once per poll.
+ • Real-time Results:
+As users vote, poll results update instantly for everyone viewing the poll, using Supabase’s real-time subscriptions.
+ • Browse & Share Polls:
+Users can browse public polls and share links to invite others to vote.
+ • Admin Controls:
+Poll creators can close polls, view detailed results, or delete their polls.
+
+Database Schema (Supabase)
+ • users
+(Managed by Supabase Auth)
+ • polls
+ ▫ id (UUID, PK)
+ ▫ creator_id (FK to users)
+ ▫ title (text)
+ ▫ description (text)
+ ▫ is_open (boolean)
+ ▫ created_at (timestamp)
+ • options
+ ▫ id (UUID, PK)
+ ▫ poll_id (FK to polls)
+ ▫ text (text)
+ • votes
+ ▫ id (UUID, PK)
+ ▫ poll_id (FK to polls)
+ ▫ option_id (FK to options)
+ ▫ user_id (FK to users)
+ ▫ created_at (timestamp)
+
+Next.js Pages/Components
+ • Home Page: List of recent or popular polls.
+ • Poll Detail Page: View poll, vote, and see real-time results.
+ • Create Poll Page: Form to create a new poll.
+ • My Polls Page: Manage polls created by the user.
+ • Authentication Pages: Sign up, log in, and profile management.
+
+Real-time Voting
+ • Use Supabase’s real-time subscriptions to listen for new votes on a poll and update the results chart instantly.
+
+Example User Flow
+ 1. User signs up/logs in.
+ 2. User creates a poll with a question and options.
+ 3. User shares the poll link.
+ 4. Others visit the link, vote, and see results update live.
+ 5. Poll creator can close the poll to stop new votes.
+
+Tech Stack
+ • Frontend: Next.js (React)
+ • Backend/Database: Supabase (Postgres, Auth, Realtime)
+ • UI: Tailwind CSS or Chakra UI for styling
+ • Charts: Recharts or Chart.js for displaying results
+
+Would you like a sample database schema, code snippets, or a project structure for this app?
