@@ -6,7 +6,6 @@
   "version": "2.26.0",
   "createdAt": "2025-07-16T11:31:24.463Z",
   "database": "postgres",
-  "orm": "drizzle",
   "backend": "next",
   "runtime": "node",
   "frontend": [
