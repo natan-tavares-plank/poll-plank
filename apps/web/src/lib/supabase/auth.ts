@@ -1,4 +1,5 @@
-import type { Session, User } from "@supabase/supabase-js";
+"use server";
+import type { User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 

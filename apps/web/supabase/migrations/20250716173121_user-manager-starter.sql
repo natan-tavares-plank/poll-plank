@@ -1,5 +1,8 @@
+-- begin tx
+begin;
+
 -- Create a table for public profiles
-create table profiles (
+create table if not exists profiles (
   id uuid references auth.users on delete cascade not null primary key,
   updated_at timestamp with time zone,
   username text unique,
@@ -10,20 +13,25 @@ create table profiles (
 
 -- Set up Row Level Security (RLS)
 -- See https://supabase.com/docs/guides/auth/row-level-security for more details.
-alter table profiles
+alter table if exists profiles
   enable row level security;
 
+drop policy if exists "Public profiles are viewable by everyone." on profiles;
 create policy "Public profiles are viewable by everyone." on profiles
   for select using (true);
 
+drop policy if exists "Users can insert their own profile." on profiles;
 create policy "Users can insert their own profile." on profiles
   for insert with check ((select auth.uid()) = id);
 
+drop policy if exists "Users can update own profile." on profiles;
 create policy "Users can update own profile." on profiles
   for update using ((select auth.uid()) = id);
 
 -- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
 -- See https://supabase.com/docs/guides/auth/managing-user-data#using-triggers for more details.
+drop trigger if exists on_auth_user_created on auth.users;
+drop function if exists public.handle_new_user();
 create function public.handle_new_user()
 returns trigger
 set search_path = ''
@@ -40,12 +48,17 @@ create trigger on_auth_user_created
 
 -- Set up Storage!
 insert into storage.buckets (id, name)
-  values ('avatars', 'avatars');
+  select 'avatars', 'avatars'
+  where not exists (select 1 from storage.buckets where id = 'avatars');
 
 -- Set up access controls for storage.
 -- See https://supabase.com/docs/guides/storage#policy-examples for more details.
+drop policy if exists "Avatar images are publicly accessible." on storage.objects;
 create policy "Avatar images are publicly accessible." on storage.objects
   for select using (bucket_id = 'avatars');
 
+drop policy if exists "Anyone can upload an avatar." on storage.objects;
 create policy "Anyone can upload an avatar." on storage.objects
   for insert with check (bucket_id = 'avatars');
+
+commit;
