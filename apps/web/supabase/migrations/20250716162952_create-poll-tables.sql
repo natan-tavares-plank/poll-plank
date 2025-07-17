@@ -31,27 +31,31 @@ alter table if exists votes enable row level security;
 
 -- Polls
 -- Only authenticated users can read polls
-create policy if not exists "Authenticated read polls"
+drop policy if exists "Authenticated read polls" on polls;
+create policy "Authenticated read polls"
 on polls
 for select
 to authenticated
 using (true);
 
 -- Only authenticated users can create polls
-create policy if not exists "Authenticated insert polls"
+drop policy if exists "Authenticated insert polls" on polls;
+create policy "Authenticated insert polls"
 on polls
 for insert
 to authenticated
 with check ((select auth.uid()) = created_by);
 
 -- Only poll creator can update/delete their own polls
-create policy if not exists "Poll owner update"
+drop policy if exists "Poll owner update" on polls;
+create policy "Poll owner update"
 on polls
 for update
 to authenticated
 using ((select auth.uid()) = created_by);
 
-create policy if not exists "Poll owner delete"
+drop policy if exists "Poll owner delete" on polls;
+create policy "Poll owner delete"
 on polls
 for delete
 to authenticated
@@ -59,14 +63,16 @@ using ((select auth.uid()) = created_by);
 
 -- Options
 -- Only authenticated users can read options
-create policy if not exists "Authenticated read options"
+drop policy if exists "Authenticated read options" on options;
+create policy "Authenticated read options"
 on options
 for select
 to authenticated
 using (true);
 
 -- Only authenticated users can add options to their own, unpublished polls
-create policy if not exists "Authenticated insert options"
+drop policy if exists "Authenticated insert options" on options;
+create policy "Authenticated insert options"
 on options
 for insert
 to authenticated
@@ -80,7 +86,8 @@ with check (
 );
 
 -- Only allow update/delete of options if poll is not published and user is poll owner
-create policy if not exists "Authenticated update options if poll not published"
+drop policy if exists "Authenticated update options if poll not published" on options;
+create policy "Authenticated update options if poll not published"
 on options
 for update
 to authenticated
@@ -93,7 +100,8 @@ using (
   )
 );
 
-create policy if not exists "Authenticated delete options if poll not published"
+drop policy if exists "Authenticated delete options if poll not published" on options;
+create policy "Authenticated delete options if poll not published"
 on options
 for delete
 to authenticated
@@ -108,27 +116,31 @@ using (
 
 -- Votes
 -- Only authenticated users can read votes
-create policy if not exists "Authenticated read votes"
+drop policy if exists "Authenticated read votes" on votes;
+create policy "Authenticated read votes"
 on votes
 for select
 to authenticated
 using (true);
 
 -- Only authenticated users can vote (insert)
-create policy if not exists "Authenticated insert votes"
+drop policy if exists "Authenticated insert votes" on votes;
+create policy "Authenticated insert votes"
 on votes
 for insert
 to authenticated
 with check ((select auth.uid()) = user_id);
 
 -- Only allow update/delete of own votes
-create policy if not exists "Authenticated update own votes"
+drop policy if exists "Authenticated update own votes" on votes;
+create policy "Authenticated update own votes"
 on votes
 for update
 to authenticated
 using ((select auth.uid()) = user_id);
 
-create policy if not exists "Authenticated delete own votes"
+drop policy if exists "Authenticated delete own votes" on votes;
+create policy "Authenticated delete own votes"
 on votes
 for delete
 to authenticated

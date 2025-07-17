@@ -27,7 +27,6 @@ export default function LoginPage() {
 					name="email"
 					type="email"
 					required
-					value={"natan.tavares@joinplank.com"}
 				/>
 
 				<InputField
@@ -36,7 +35,6 @@ export default function LoginPage() {
 					name="password"
 					type="password"
 					required
-					value={"123456"}
 				/>
 
 				<Button type="submit" formAction={login}>
