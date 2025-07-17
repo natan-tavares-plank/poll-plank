@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../index.css";
 import Header from "@/components/header";
 import Providers from "@/components/providers";
+import { createClient } from "@/lib/supabase/server";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -19,11 +20,20 @@ export const metadata: Metadata = {
 	description: "poll-plank",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const supabase = await createClient();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	// if (!user?.id) {
+	// 	return <>{children}</>;
+	// }
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
@@ -31,7 +41,7 @@ export default function RootLayout({
 			>
 				<Providers>
 					<div className="grid h-svh grid-rows-[auto_1fr]">
-						<Header />
+						{user?.id && <Header />}
 						{children}
 					</div>
 				</Providers>

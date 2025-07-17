@@ -8,7 +8,7 @@ export default function Header() {
 	const links = [
 		{ to: "/", label: "Home" },
 		{ to: "/", label: "My Polls" },
-		{ to: "/", label: "My Surveys" },
+		// { to: "/", label: "My Surveys" },
 		{ to: "/", label: "Templates" },
 	];
 
@@ -23,7 +23,7 @@ export default function Header() {
 					{links.map(({ to, label }) => {
 						return (
 							<Link
-								key={to}
+								key={label}
 								href={to}
 								className="transition-colors duration-300 hover:text-zinc-500"
 							>

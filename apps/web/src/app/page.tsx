@@ -1,13 +1,10 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { requireAuth } from "@/lib/supabase/auth";
 
-export default function Home() {
-	const user = {
-		name: "John Doe",
-	};
+export default async function Home() {
+	const user = await requireAuth();
 
 	const polls = [
 		{
@@ -47,7 +44,7 @@ export default function Home() {
 				<div className="mb-8">
 					<h2 className="mb-2 font-bold text-2xl">Dashboard</h2>
 					<p className="text-sm text-zinc-700">
-						Welcome back, {user.name}! Here's an overview of your polls and
+						Welcome back, {user.email}! Here's an overview of your polls and
 						surveys.
 					</p>
 				</div>
