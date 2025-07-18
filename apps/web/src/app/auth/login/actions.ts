@@ -54,7 +54,7 @@ export async function signup(formData: FormData) {
 		email,
 		password,
 		options: {
-			emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify-email`,
+			emailRedirectTo: "https://71d7e4a753ef.ngrok-free.app",
 		},
 	});
 
