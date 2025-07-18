@@ -58,13 +58,11 @@ export class Poll {
 			throw new Error("Option ID is required");
 		}
 
-		const { data, error } = await this.supabase.from("votes").insert({
+		const { error } = await this.supabase.from("votes").insert({
 			option_id,
 			poll_id: this.pollId,
 			user_id: this.userID,
 		});
-
-		console.log({ data, error });
 
 		if (error) {
 			throw error;
@@ -88,8 +86,6 @@ export class Poll {
 		if (error) {
 			throw error;
 		}
-
-		console.log({ data, error });
 
 		return data;
 	}

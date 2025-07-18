@@ -3,28 +3,35 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
+import client from "@/lib/posthog";
 import { createClient } from "@/lib/supabase/server";
 
 export async function login(formData: FormData) {
 	const payload = Object.fromEntries(formData.entries());
-
 	const schema = z.object({
 		email: z.email(),
 		password: z.string().min(6),
 	});
-
 	const { email, password } = schema.parse(payload);
 
 	const supabase = await createClient();
-
-	// type-casting here for convenience
-	// in practice, you should validate your inputs
-	const { error } = await supabase.auth.signInWithPassword({ email, password });
+	const { data, error } = await supabase.auth.signInWithPassword({
+		email,
+		password,
+	});
 
 	if (error) {
 		console.error({ error });
 		redirect("/error");
 	}
+
+	client.capture({
+		distinctId: data.user.id,
+		event: "user_logged_in",
+		properties: {
+			email,
+		},
+	});
 
 	revalidatePath("/auth/login", "layout");
 	redirect("/");
@@ -43,11 +50,27 @@ export async function signup(formData: FormData) {
 
 	// type-casting here for convenience
 	// in practice, you should validate your inputs
-	const { error } = await supabase.auth.signUp({ email, password });
+	const { data, error } = await supabase.auth.signUp({
+		email,
+		password,
+		options: {
+			emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify-email`,
+		},
+	});
 
 	if (error) {
 		console.error({ error });
 		redirect("/error");
+	}
+
+	if (data.user?.id) {
+		client.capture({
+			distinctId: data.user.id,
+			event: "user_signed_up",
+			properties: {
+				email,
+			},
+		});
 	}
 
 	// Redirect to verify email page after successful signup

@@ -133,6 +133,7 @@ export default function PollPageClient({ pollId }: { pollId: string }) {
 			});
 		});
 		channel.subscribe();
+
 		return () => {
 			supabase.removeChannel(channel);
 			subscribedRef.current = false;
