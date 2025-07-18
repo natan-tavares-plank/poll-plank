@@ -7,16 +7,16 @@ import { ModeToggle } from "./mode-toggle";
 export default function Header() {
 	const links = [
 		{ to: "/", label: "Home" },
-		{ to: "/", label: "My Polls" },
+		// { to: "/", label: "My Polls" },
 		// { to: "/", label: "My Surveys" },
-		{ to: "/", label: "Templates" },
+		// { to: "/", label: "Templates" },
 	];
 
 	return (
 		<div>
 			<div className="flex flex-row items-center gap-8 px-2 py-2">
 				<Link href="/">
-					<p className="font-bold text-xl">Pools & Surveys</p>
+					<p className="font-bold text-xl">Polls</p>
 				</Link>
 
 				<nav className="flex gap-8 text-sm">

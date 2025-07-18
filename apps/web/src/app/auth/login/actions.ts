@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
+import { env } from "@/env";
 import client from "@/lib/posthog";
 import { createClient } from "@/lib/supabase/server";
 
@@ -54,7 +55,7 @@ export async function signup(formData: FormData) {
 		email,
 		password,
 		options: {
-			emailRedirectTo: "https://71d7e4a753ef.ngrok-free.app",
+			emailRedirectTo: env.NEXT_PUBLIC_APP_URL,
 		},
 	});
 
